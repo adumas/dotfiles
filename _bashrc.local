@@ -106,8 +106,11 @@ bash_prompt() {
     [ $HOSTNAME == "seychelles" ]	&& SRC=$UNW
     [ $HOSTNAME == "gate" ] 		&& SRC=$UNW
     
-
-    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${W}${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
+    #for git...
+    set GIT_PS1_SHOWDIRTYSTATE
+    
+    
+    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${W}${BGG}\$(__git_ps1)${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
 	
 
 # without colors: PS1="[\u@\h \${NEW_PWD}]\\$ "
