@@ -107,10 +107,10 @@ bash_prompt() {
     [ $HOSTNAME == "gate" ] 		&& SRC=$UNW
     
     #for git...
-    set GIT_PS1_SHOWDIRTYSTATE
+    GIT_PS1_SHOWDIRTYSTATE=1
     
     
-    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${W}${BGG}\$(__git_ps1)${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
+    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${EMM}\$(__git_ps1)${NONE}${W}${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
 	
 
 # without colors: PS1="[\u@\h \${NEW_PWD}]\\$ "
