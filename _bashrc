@@ -1,0 +1,114 @@
+#############################################################################
+##
+## .bashrc
+##
+## Author: Simos Xenitellis (simos.lists@googlemail.com)
+##
+
+## This is the basic new .bashrc file, part of the BASHRC project
+## at http://bashrc.sourceforge.net
+
+#         basic settings for interactive and non-interactive shells
+# Thanks to Heather Downs <heather@netlens.com> for the "set -f -l" flags
+# "set -f" adds a variable in _front of the list, keep one copy
+# "set -l" adds a variable at the end(_last) of the list, keep one copy
+#    paths with lower priority than system paths like /bin /sbin,,,
+# Thanks to Spencer White <spencer@nexthost.com> for "if root" condition
+
+#         "root" environment (basic)
+##if ($LOGNAME == "root") then
+##	set -f path = ( $path /sbin )
+##	set -f path = ( $path /usr/sbin )
+##	set -l path = ( $path /usr/local/sbin )
+##endif
+
+#         "user" + "root" environment (basic)
+##set -f path = ( $path /bin )
+##set -f path = ( $path /usr/bin )
+##set -l path = ( $path /usr/local/bin )
+
+#         "user" + "root" environment (misc)
+##set -l path = ( $path /usr/local/ssl/bin )
+##set -l path = ( $path /usr/local/samba/bin )
+##set -l path = ( $path /usr/local/java/bin )
+##set -l path = ( $path /usr/games )
+
+########################################################################
+#         skip remaining setup if not an interactive shell
+#[ -z "$PS1" ] && return
+if [ -z "$PS1" ]; then
+	return
+fi
+
+#        settings  for interactive shells
+source $HOME/.bashrc.set
+
+#        aliases   for interactive shells
+source $HOME/.bashrc.alias
+
+#        bindkeys   for interactive shells
+source $HOME/.bashrc.bindkey
+
+#        completions for interactive shells
+source $HOME/.bash_completion.main
+source $HOME/.git-completion.bash
+
+#	local settings
+source $HOME/.bashrc.local
+
+#        commands for interactive shells
+welcome() {
+    local NONE="\033[0m"    # unsets color to term's fg color
+    
+    # regular colors
+    local K="\033[0;30m"    # black
+    local R="\033[0;31m"    # red
+    local G="\033[0;32m"    # green
+    local Y="\033[0;33m"    # yellow
+    local B="\033[0;34m"    # blue
+    local M="\033[0;35m"    # magenta
+    local C="\033[0;36m"    # cyan
+    local W="\033[0;37m"    # white
+    
+    # emphasized (bolded) colors
+    local EMK="\033[1;30m"
+    local EMR="\033[1;31m"
+    local EMG="\033[1;32m"
+    local EMY="\033[1;33m"
+    local EMB="\033[1;34m"
+    local EMM="\033[1;35m"
+    local EMC="\033[1;36m"
+    local EMW="\033[1;37m"
+    
+    # background colors
+    local BGK="\033[40m"
+    local BGR="\033[41m"
+    local BGG="\033[42m"
+    local BGY="\033[43m"
+    local BGB="\033[44m"
+    local BGM="\033[45m"
+    local BGC="\033[46m"
+    local BGW="\033[47m"
+    
+    #underline colors
+    local UNK='\e[4;30m' # Black
+    local UNR='\e[4;31m' # Red
+    local UNG='\e[4;32m' # Green
+    local UNY='\e[4;33m' # Yellow
+    local UNB='\e[4;34m' # Blue
+    local UNP='\e[4;35m' # Purple
+    local UNC='\e[4;36m' # Cyan
+    local UNW='\e[4;37m' # White
+    local UNOFF='\e[24m'
+    
+#new shell commands
+echo -e "${W}`date`"
+echo -e "${EMW}${BGB}$PWD${NONE}"
+echo -e "${EMR}`uptime | sed \"s:^\ ::\"`"
+local mem="$(( `sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/1024))/$((`sed -nu "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/Ip" /proc/meminfo`/1024 )) MB"
+echo -e "${EMM}Memory Usage: $mem"
+tput -T xterm sgr0
+}
+welcome
+
+

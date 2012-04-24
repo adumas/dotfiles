@@ -1,0 +1,243 @@
+#############################################################################
+##
+## .bashrc.local
+##
+## Author: Simos Xenitellis (simos.lists@googlemail.com)
+##
+## This is the .bashrc.local file, part of the BASHRC project
+## at http://bashrc.sourceforge.net
+##
+## Here you add your aliases, sets, completions and bindkeys that you want
+## to override from the default settings.
+
+#ENVIRONMENT VARIABLES
+export VISUAL=`which vim`
+export EDITOR=`which vim`
+
+export PRINTER="InvalidPrinter"
+export LPDEST="InvalidPrinter"
+
+set FSENV_KEEP_PROMPT
+export PYTHONPATH="/homes/6/adumas/lib/python/"
+
+export ICH="/cluster/ichresearch/Petechial"
+export PET="/autofs/space/eesmith_001/users/dierksen/Petichial"
+export SUBJECTS_DIR=$ICH
+export SCRIPTS="/autofs/space/eesmith_001/users/dierksen/Petichial/scripts"
+
+[ "$COLORTERM" == "gnome-terminal" ] && export TERM="xterm-256color"
+
+
+#PATH
+append () {
+  # First remove the directory
+  local IFS=':'
+  local NEWPATH
+  for DIR in $PATH; do
+     if [ "$DIR" != "$1" ]; then
+       NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
+     fi
+  done
+
+  # Then append the directory
+  export PATH=$NEWPATH:$1
+}
+
+if [ -d "$HOME/bin" ] ; then
+  append $HOME/bin
+fi
+
+append $SCRIPTS
+unset append
+
+
+#NOW THE PROMPT AND TITLE BAR
+bash_prompt() {
+    local NONE="\[\033[0m\]"    # unsets color to term's fg color
+    
+    # regular colors
+    local K="\[\033[0;30m\]"    # black
+    local R="\[\033[0;31m\]"    # red
+    local G="\[\033[0;32m\]"    # green
+    local Y="\[\033[0;33m\]"    # yellow
+    local B="\[\033[0;34m\]"    # blue
+    local M="\[\033[0;35m\]"    # magenta
+    local C="\[\033[0;36m\]"    # cyan
+    local W="\[\033[0;37m\]"    # white
+    
+    # emphasized (bolded) colors
+    local EMK="\[\033[1;30m\]"
+    local EMR="\[\033[1;31m\]"
+    local EMG="\[\033[1;32m\]"
+    local EMY="\[\033[1;33m\]"
+    local EMB="\[\033[1;34m\]"
+    local EMM="\[\033[1;35m\]"
+    local EMC="\[\033[1;36m\]"
+    local EMW="\[\033[1;37m\]"
+    
+    # background colors
+    local BGK="\[\033[40m\]"
+    local BGR="\[\033[41m\]"
+    local BGG="\[\033[42m\]"
+    local BGY="\[\033[43m\]"
+    local BGB="\[\033[44m\]"
+    local BGM="\[\033[45m\]"
+    local BGC="\[\033[46m\]"
+    local BGW="\[\033[47m\]"
+    
+    #underline colors
+    local UNK='\e[4;30m' # Black
+    local UNR='\e[4;31m' # Red
+    local UNG='\e[4;32m' # Green
+    local UNY='\e[4;33m' # Yellow
+    local UNB='\e[4;34m' # Blue
+    local UNP='\e[4;35m' # Purple
+    local UNC='\e[4;36m' # Cyan
+    local UNW='\e[4;37m' # White
+    local UNOFF='\e[24m'
+    
+    local UC=$G                 # user's color
+    [ $UID -eq "0" ] && UC=$R   # root's color
+
+    local SRC=${UNG}		#server color, default to underline green
+    local ENDP='\$'		#ending; will be $ for most, or %> for launchpad
+
+    [ $HOSTNAME == "launchpad" ] 	&& SRC=$UNW && ENDP='%>'
+    [ $HOSTNAME == "seychelles" ]	&& SRC=$UNW
+    [ $HOSTNAME == "gate" ] 		&& SRC=$UNW
+    
+
+    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${W}${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
+	
+
+# without colors: PS1="[\u@\h \${NEW_PWD}]\\$ "
+# extra backslash in front of \$ to make bash colorize the prompt
+}
+
+#if [[ "$COLORTERM" == "gnome-terminal" ]]; then
+   PROMPT_COMMAND='history -a;echo -en "\033]0;${HOSTNAME} [`temp=$(tty); echo ${temp:5}`]$FSTAG\007";'
+#else
+#   PROMPT_COMMAND='history -a;'
+#fi
+
+bash_prompt
+#unset bash_prompt
+
+## FUNCTIONS
+[[ -f ~/.autojump/etc/profile.d/autojump.bash ]] && source ~/.autojump/etc/profile.d/autojump.bash
+eval `dircolors -b ~/.dircolors.256dark`	#Proper LS_COLOR vars
+
+
+#HISTORY SETTINGS
+chmod u=rw $HISTFILE
+export HISTFILESIZE=10000 # Record last 10,000 commands
+export HISTSIZE=10000 # Record last 10,000 commands per session
+
+# ALIASES
+## MARTINOS/NMR SPECIFIC
+alias pet='cd /autofs/space/eesmith_001/users/dierksen/Petichial'
+alias ich='cd /cluster/ichresearch/Petechial'
+alias CAA='cd /autofs/space/eesmith_001/users/dierksen/CAA'
+alias ups='unpacksdcmdir -src dicom_raw -targ mri -fsfast -scanonly scans'
+alias upu='unpacksdcmdir -src dicom_raw -targ mri -fsfast -cfg config_file -u'
+alias qstatme='$SCRIPTS/watch_cluster.pl'
+alias wikiuploader=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/wikiuploader_andrew.pl 
+alias unpack=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/Unpack.sh 
+alias launch=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/launch.sh 
+alias lastjob=/homes/6/adumas/bin/lastjob.sh 
+alias ljout=/homes/6/adumas/bin/lastjob_output.sh 
+alias ljerror=/homes/6/adumas/bin/lastjob_error.sh 
+alias rmjobs=/homes/6/adumas/bin/deleteAllJobs.sh 
+alias sdp='export SUBJECTS_DIR=$PET'
+alias sdi='export SUBJECTS_DIR=$ICH'
+alias stable='source $ICH/SetUpFreeSurferV5.bash'
+alias stab='source $ICH/SetUpFreeSurferV5.bash'
+alias fs='source $ICH/SetUpFreeSurferV5.bash'
+alias fs4='source $PET/SetUpFreeSurferV4.bash'
+alias ee='~/bin/eesmith'
+alias watchc='watch -n 2 $SCRIPTS/watch_cluster.pl'
+
+#alias kiwi='echo "logging on to kiwi..."; ssh dumas@kiwi.mgh.harvard.edu'
+alias locate='locate -d /autofs/space/eesmith_001/users/dierksen/Petichial/mlocate.db*'
+
+alias pbcmd="~/bin/pbslastcmd.sh" 
+alias vncserver='vncserver -depth 24 -geometry 1280x1024' 
+alias dcminfo=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/dicomInfo.sh 
+alias scriptfind="~/bin/within_scripts_search.sh"
+
+#GENERAL SHELL HANDY ALIASES
+alias c='clear'
+alias h='history'
+alias ht='history | tail -20'
+alias hsy='history -n'
+alias lsnc='ls -1 --color=none'
+alias cls='clear; ls'
+alias dus='du -cks * | sort -nr'
+
+
+alias ls='ls --color' #I like color
+alias l='ls -lFh'     #size,show type,human readable
+alias la='ls -lAFh'   #long list,show almost all,show type,human readable
+alias lr='ls -tRFh'   #sorted by date,recursive,show type,human readable
+alias lt='ls -ltFh'   #long list,sorted by date,show type,human readable
+alias lc='ls -1 --color=none'   #long list,sorted by date,show type,human readable
+ 
+##cd, because typing the backslash is ALOT of work!!
+alias .='cd ../'
+alias ..='cd ../../'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+
+
+
+
+###OLD
+#PROMPT_COMMAND='history -a;echo -en "\033[m\033[38;5;2m"$(( `sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/1024))"\033[38;5;22m/"$((`sed -nu "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/Ip" /proc/meminfo`/1024 ))MB"\t\033[m\033[38;5;55m$(< /proc/loadavg)\033[m"'
+#PS1='\[\e[m\n\e[1;30m\][$$:$PPID \j:\!\[\e[1;30m\]]\[\e[0;36m\] \T \d \[\e[1;30m\][\[\e[1;34m\]\u@\H\[\e[1;30m\]:\[\e[0;37m\]${SSH_TTY} \[\e[0;32m\]+${SHLVL}\[\e[1;30m\]] \[\e[1;37m\]\w\[\e[0;37m\] \n($SHLVL:\!)\$ '
+##################################################
+# Fancy PWD display function
+##################################################
+# The home directory (HOME) is replaced with a ~
+# The last pwdmaxlen characters of the PWD are displayed
+# Leading partial directory names are striped off
+# /home/me/stuff          -> ~/stuff               if USER=me
+# /usr/share/big_dir_name -> ../share/big_dir_name if pwdmaxlen=20
+##################################################
+#bash_prompt_command() {
+#    # How many characters of the $PWD should be kept
+#    local pwdmaxlen=25
+#    # Indicate that there has been dir truncation
+#    local trunc_symbol=""
+#    local dir=${PWD##*/}
+#    pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+#    NEW_PWD=${PWD/#$HOME/\~}
+#    NEW_PWD=${PWD/#$ICH/ich}
+#    NEW_PWD=${PWD/#$PET/pet}
+#    local pwdoffset=$(( ${#NEW_PWD} - pwdmaxlen ))
+#    if [ ${pwdoffset} -gt "0" ]
+#    then
+#        NEW_PWD=${NEW_PWD:$pwdoffset:$pwdmaxlen}
+#        NEW_PWD=${trunc_symbol}${NEW_PWD#*/}
+#    fi
+#}
+#    PS1="$TITLEBAR ${EMK}[${UC}\u${EMK}@${UC}\h ${EMB}\${NEW_PWD}${EMK}]${UC}\\$ ${NONE}"
+#PS1="$TITLEBAR${EMK}${UC}\u${W}@\H${EMK}(${W}${SSH_TTY#/*/}${G}+${SHLVL}${EMK})${W}:${EMW}\${W}[\!]\$ ${NONE}"
+#COLORS
+#BWhite='\e[1;37m'       # Bold White
+#TxtReset='\e[0m'        # Text Reset
+#BBlue='\e[1;34m'        # Bold Blue
+#UWhite='\e[4;37m'       # Underline White
+#PROMPT
+#case $TERM in
+#    xterm*)
+#        #PS1="\[\033]0;\h: \w [\l] \007\]\[$BWhite\]\u\[$TxtReset\]@\h:\W[\!]\$ "
+#	TOPRIGHT="\[\033[s\]\[\033[1;\$((COLUMNS-`echo $PWD | wc -m`))f\]\$PWD\[\033[u\]"
+#	PS1='\[\e[1;30m\]\[\e[1;37m\]\u\[\e[0;37m\]@\H\[\e[1;30m\](\[\e[0;37m\]${SSH_TTY#/*/}\[\e[0;32m\]+${SHLVL}\[\e[1;30m\])\[\e[0;37m\]:\[\e[1;37m\]\W\[\e[0;37m\][\!]\$ '
+#	PROMPT_COMMAND='history -a;echo -en "\033]0;${HOST}:$PWD [`temp=$(tty) ; echo ${temp:5}`]\007"'
+#       ;;
+#  *)
+#        PS1="\[$BWhite\]\u@\h:\W[\!]\$ "
+#        ;;
+#esac
+
+#ALIASES FROM SHELL

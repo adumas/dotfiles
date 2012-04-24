@@ -1,0 +1,36 @@
+# Begin ~/.bash_profile
+# Written for Beyond Linux From Scratch
+# by James Robertson <jameswrobertson@earthlink.net>
+# updated by Bruce Dubbs <bdubbs@linuxfromscratch.org>
+
+# Personal environment variables and startup programs.
+
+# Personal aliases and functions should go in ~/.bashrc.  System wide
+# environment variables and startup programs are in /etc/profile.
+# System wide aliases and functions are in /etc/bashrc.
+
+if [ -f "$HOME/.bashrc" ] ; then
+  source $HOME/.bashrc
+fi
+
+ssh_agent_start () {
+if [ -f ~/.agent.env ]; then
+  . ~/.agent.env -s > /dev/null
+
+  if ! kill -0 $SSH_AGENT_PID > /dev/null 2>&1; then
+    echo
+    echo "Stale agent file found.  Spawning new agent..."
+    eval `ssh-agent -s | tee ~/.agent.env`
+    ssh-add
+  fi
+else
+  echo "Starting ssh-agent..."
+  eval `ssh-agent -s | tee ~/.agent.env`
+  ssh-add
+fi
+}
+
+#[ $HOSTNAME == "eesmith" ] && ssh_agent_start
+unset ssh_agent_start
+
+# End ~/.bash_profile

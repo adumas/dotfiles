@@ -1,0 +1,690 @@
+chdir $HOME
+logfile ~/.screen/screen_%y-%m-%d_%0c.%n
+setenv LC_CTYPE en_US.UTF-8
+defutf8 on
+defencoding UTF-8
+#crlf off
+multiuser off
+deflogin off
+
+silencewait 15
+msgwait 5         # 1 second messages
+sorendition =s Gk
+silencewait 5
+
+hardcopydir ~/.hardcopy/screen_%y-%m-%d_%0c.%n
+bufferfile $HOME/.screen/buffer
+#hardcopy append on
+
+startup_message off
+vbell on
+#vbell_msg "   Wuff  ----  Wuff!!  "
+#idle 3600 pow_detach
+autodetach on
+
+defflow auto # will force screen to process ^S/^Q
+defnonblock 5
+defscrollback 300
+deflog off
+defmode 620
+defmonitor off
+zombie "^["     # don't kill window after the process died
+
+#defwrap off
+
+#altscreen on       # enable support for the "alternate screen" capability in all windows
+pow_detach_msg "Screen session of $LOGNAME $:cr:$:nl:ended."    # emulate .logout message
+
+
+
+#nethack on      # print wackier status messages
+nonblock on     # If a window goes unresponsive, don't block the whole session waiting for it.
+defnonblock 5   # flaky/slow ssh lines
+altscreen on    # restore window contents after using (e.g.) vi
+defmonitor off  # turn monitoring on
+shell bash      # use the default shell
+shelltitle "$ |bash"
+defbce on      # erase background with current bg color
+defflow on     # disable Ctrl-S/Ctrl-Q "flow control"
+
+
+
+# CAPTIONS
+#
+# some notes on COLOR before explaining its use in
+# the commands caption, hardstatus, and sorendition.
+#
+# COLOR:  colors codes are combinations of
+# [attribute modifier] [color description]
+# the manual talks of "attribute/color modifiers".
+# see the manual, section "STRING ESCAPES".
+#
+# Color table:
+# 0 Black             .    leave color unchanged
+# 1 Red               b    blue
+# 2 Green             c    cyan
+# 3 Brown / yellow    d    default color
+# 4 Blue              g    green           b    bold
+# 5 Purple            k    blacK           B    blinking
+# 6 Cyan              m    magenta         d    dim
+# 7 White             r    red             r    reverse
+# 8 unused/illegal    w    white           s    standout
+# 9 transparent       y    yellow          u    underline
+#
+# note: "dim" is not mentioned in the manual.
+caption always "%{.wB}%-w%{.bW}%n %t%{-}%+w %=%{..Lw} %H %{..b} %m/%d %C%a "
+#caption always "%{kG}%?%-Lw%?%{bw}%n*%f %t%?(%u)%?%{kG}%?%+Lw%?"
+
+#
+# hardstatus
+#
+defhstatus "screen: ^En (^Et)"
+#defhstatus "%{= 9}%-w%{= 9}%50>%n* %{= 9}%t%{= 9}%+w%< %=  %{= R} %{= 9}%c:%s"  # nice and simple
+hardstatus on
+#hardstatus alwayslastline "[%02c] %`%-w%{=b bw}%n %t%{-}%+w %=%{..Lw} %H %{..g} %m/%d %C%a "
+hardstatus alwayslastline '%{= kG}%{C}Screen: %{c}%{= kG}[ %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{C} %m/%d %{W}%c %{g}]'
+
+
+# terminfo and termcap for nice 256 color terminal
+termcapinfo xterm*|rxvt-* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo xterm*|rxvt-* 'hs:ts=\E]0;:fs=\007:ds=\E]0;\007'
+termcapinfo xterm*|rxvt-* ti@:te=\E[3J
+termcapinfo xterm*|rxvt-* hs@:cs=\E[%i%d;%dr:im=\E[4h:ei=\E[4l
+termcapinfo xterm*|rxvt-* hs@:cs=\E[%i%p1%d;%p2%dr:im=\E[4h:ei=\E[4l
+#termcapinfo xterm-256color 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+attrcolor b ".I"        # allow bold colors - necessary for some reason
+term screen-256color   #By default, screen uses an 8-color terminal emulator. Use the following line to enable more colors, more-capable terminal emulator:
+
+
+# ===============================================================
+# Messages
+# ===============================================================
+# There are two kinds of messages:  "activity" and "bell"
+# They are also the names of the commands that set the
+# respective messages.  In every message there can be "meta
+# strings" which are replaced by values.  A meta string starts
+# with a percent sign and is then followed by one
+# of the following letters: aAcCdDfFhHlmMnstuwWyY
+# The meta strings usually refer to the current
+# date and time or to a window title or number.
+# There are also some specials like embedded branches (with %?),
+# color codes (with %{xy}) and padding (with %=, %<, %>).
+# you can find their description in the manual in section
+# "STRING ESCAPES":
+#  %%      percent sign (the escape character itself)
+#  %a      either 'am' or 'pm' - according to the current time
+#  %A      either 'AM' or 'PM' - according to the current time
+#  %c      current time HH:MM in 24h format
+#  %C      current time HH:MM in 12h format
+#  %d      day number - number of current day
+#  %D      Day's name - the weekday name of the current day
+#  %f      flags of the window
+#  %F      sets %? to true if the window has the focus
+#  %h      hardstatus of the window
+#  %H      hostname of the system
+#  %l      current load of the system
+#  %m      month number
+#  %M      month name
+#  %n      window number
+#  %s      seconds
+#  %t      window title
+#  %u      all other users on this window
+#  %w      all window numbers and names.
+#  %-w     all window numbers up to the current window
+#  %+w     all window numbers after the current window
+#  %W      all window numbers and names except the current one
+#  %y      last two digits of the year number
+#  %Y      full year number
+#
+# Older versions of screen used a single '%' character
+# to display window titles - but since version 3.7 this is
+# obsoleted by '%n' and it will vanish in future releases.
+# So please update your screenrc to meet this convention!
+#
+# ===============================================================
+# "~" stands for the "bell" character
+#
+# activity              'Activity in window %n' # default
+#
+# use %n to display the window number and %t for its title:
+# activity              "activity in window #%n title: %t~"
+#
+
+# activity              "activity in window #%n title: %t~"
+#
+activity              "%C -> %n%f %t activity!"
+
+#
+# pass on the "beep" (CTRL-G) by adding a '~':
+bell                  "%C -> %n%f %t bell!~"
+
+################
+#
+# keybindings
+#
+
+#remove some stupid / dangerous key bindings
+bind k
+bind ^k
+bind .
+bind ^\
+bind \\
+bind ^h
+bind h
+#make them better
+bind 'K' kill
+bind 'I' login on
+bind 'O' login off
+bind '}' history
+
+bind = resize =
+bind + resize +1
+bind - resize -1
+bind _ resize max
+
+# Finally! Shift-pg up or down to view scrollback buffer
+#
+bindkey "^[[5~" eval "copy" "stuff ^u"
+bindkey -m "^[[5~" stuff ^u
+bindkey -m "^[[6~" stuff ^d
+
+# use the PgUp and PgDn keys to enter copy mode and page through the window backlog:
+#bindkey -k kP copy
+
+################
+## CUSTOM BINDINGS
+bind . eval 'source /etc/screenrc' 'echo "~/.screenrc has been reloaded."'
+bind ^w windowlist -b
+
+# GOOGLE - Web Search Engine
+# bind G # unbound by default
+bind G screen -t 'Google' links www.google.com
+
+# X - a fast way to lock the current screen.
+bind X lockscreen
+
+bind f eval "caption splitonly" "hardstatus ignore"
+bind F eval "caption always"    "hardstatus alwayslastline"
+#bind f eval "hardstatus alwaysignore"
+#bind F eval "hardstatus alwayslastline"
+
+bind j focus down
+bind k focus up
+bind t focus top
+bind b focus bottom
+
+################
+## DEFAULT WINDOWS
+screen -h 5000 -t 'bash1'    1
+#screen -h 5000 -t 'bash2'    2
+#screen -h 5000 -t 'navi'    3 ssh navi
+#screen -h  100 -t 'top'     5 nice top -c
+select 1
+
+
+
+
+
+################
+# And here are the default bind commands if you need them:
+#
+# bind A title
+# bind C clear
+# bind D pow_detach
+# bind F fit
+# bind H log
+# bind I login on
+# bind K kill
+# bind L d
+# login
+# bind M monitor
+# bind N number
+# bind O login off
+# bind Q only
+# bind S split
+# bind W width
+# bind X remove
+# bind Z reset
+
+
+#break      ^B b
+#detach     ^D d
+#flow       ^F f
+#info       i          lockscreen X          monitor    M          other      ^A         readbuf    <          select     '          title      A          windows    ^W w       xon        ^Q q
+#clear      C          digraph    ^V         focus      ^I         kill       K          log        H          next       ^@ ^N sp n pow_break  B          redisplay  ^L l
+#split      S
+#vbell      ^G
+#wrap       ^R r
+#colon      :
+#displays   *
+#help       ?
+#lastmsg    ^M m
+#login      L
+#number     N
+#pow_detach D
+#reset      Z
+#suspend    ^Z z
+#version    v
+#writebuf   >
+#copy       ^[ [
+#fit        F
+#history    { }
+#license    ,
+#meta       a
+#only       Q
+#prev       ^P p ^?
+#screen     ^C c
+#time       ^T t
+#width      W
+#xoff       ^S s
+
+#^]  paste [.]
+#"   windowlist -b
+#+   resize +1
+#-   resize -1
+#0   select 0
+#1   select 1
+#2   select 2
+#3   select 3
+#4   select 4
+#5   select 5
+#6   select 6
+#7   select 7
+#8   select 8
+#9   select 9
+#=   resize =
+#I   login on
+#O   login off
+#]   paste .
+#_   resize max
+#hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
+#hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+#hardstatus alwayslastline "%{yk}( %{Y}%H %{y})%= %{wk}%?%-Lw%?%{R}(%{W}%n*%f %t%?(%u)%?%{R})%{w}%?%+Lw%?%?%= %{y}( %{Y}load: %l %{y})"
+##hardstatus alwayslastline "%{=b kW}[ %{= Y}$USER @ %H %{b W}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{b W}][%{= Y} %l %{b W}][%{= Y} %d/%m %{Y}%c %{b W}]"
+##hardstatus alwayslastline "%{=b kW}[ %{= Y}$USER @ %H %{b W}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{b W}][%{= Y} %m/%d/%y %{Y}%C %{b W}]"
+##hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
+##hardstatus alwayslastline "%{= kG}[ $USER@%{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d.%m.%Y %{W}%c:%s %{g}]"
+
+#bind T screen -t 'pstree' 2 sudo watch -n 2 -t pstree -p -u -c -l -a -A|sed -e 's/\\040//g'
+#bind L screen -t 'log' 3 sudo tail -s3 -n 10 -f /var/log/everything.log
+#caption always "%{yK} $LOGNAME@%H | %l | %C %A - %M-%d-%Y | %-Lw%50>%{Ky}%n%f* %t%{-}%+Lw%<%{- Wk}%{yK} | "
+#caption always "%{= wk} %?%-Lw%?%{= kd} %n*%f %t %{= wk}%?%+Lw%? %{= wk}%=%{= Wk} %C%a %m-%d-%Y %{= wk} "
+#caption always "%{=b kW}[%= %{= K}F8=List F9=new F10=title F11=prev F12=next %{=b kW}%=]"  #stolen and changed from cornfelt
+#caption always " %m%d %c |  %w"
+#caption always "%?%{ Wk}%-Lw%?%{Rk}%n*%f %t%?(%u)%?%?%{Wk}%+Lw%? %{Rk}%=%c %{rk}%d/%M/%Y"
+#caption always "%{=b dw}:%{-b dw}:%{=b dk}[ %{-b dw}%{-b dg}$USER%{-b dw}@%{-b dg}%H %{=b dk}] [ %= %?%{-b dg}%-Lw%?%{+b dk}(%{+b dw}%n:%t%{+b dk})%?(%u)%?%{-b dw}%?%{-b dg}%+Lw%? %{=b dk}]%{-b dw}:%{+b dw}:"
+#caption always "%{+b kG} %=%{-s} %{.K}%-w%{.B}%n %{.G}%t%{.K}%+w%{.G} %{+s} %="
+
+#
+# ==============================================================
+#  BIND bind - defaults
+# ==============================================================
+# The "bind" command assign keys to (internal) commands
+# SCREEN checks all the keys you type; you type the key
+# which is known as the "command character" then SCREEN
+# eats this key, too, and checks whether this key is
+# "bound" to a command.  If so then SCREEN will execute it.
+#
+# The command "bind" allows you to chose which keys
+# will be assigned to the commands.
+#
+# Some commands are bound to several keys -
+# usually to both some letter and its corresponding
+# control key combination, eg the command
+# "(create) screen" is bound to both 'c' and '^C'.
+#
+# The following list shows the default bindings:
+#
+# break       ^B b
+# clear       C
+# colon       :
+# copy        ^[ [
+# detach      ^D d
+# digraph     ^V
+# displays    *
+# dumptermcap .
+# fit         F
+# flow        ^F f
+# focus       ^I
+# hardcopy    h
+# help        ?
+# history     { }
+# info        i
+# kill        K k
+# lastmsg     ^M m
+# license     ,
+# log         H
+# login       L
+# meta        x
+# monitor     M
+# next        ^@ ^N sp n
+# number      N
+# only        Q
+# other       ^X
+# pow_break   B
+# pow_detach  D
+# prev        ^H ^P p ^?
+# quit        \
+# readbuf     <
+# redisplay   ^L l
+# remove      X
+# removebuf   =
+# reset       Z
+# screen      ^C c
+# select      " '
+# silence     _
+# split       S
+# suspend     ^Z z
+# time        ^T t
+# title       A
+# vbell       ^G
+# version     v
+# width       W
+# windows     ^W w
+# wrap        ^R r
+# writebuf    >
+# xoff        ^S s
+# xon         ^Q q
+# ^]  paste .
+# -   select -
+# 0   select 0
+# 1   select 1
+# 2   select 2
+# 3   select 3
+# 4   select 4
+# 5   select 5
+# 6   select 6
+# 7   select 7
+# 8   select 8
+# 9   select 9
+# I   login on
+# O   login off
+# ]   paste .
+#
+# ===============================================================
+# Key bindings
+# ===============================================================
+# Remove some default key bindings by binding
+# them to "nothing" (empty right-hand-side):
+#
+# bind .  dumptermcap # default
+# bind .
+# bind ^\ quit        # default
+# bind ^\
+# bind \\ quit        # default
+# bind \\
+# bind h  hardcopy    # default
+# bind h
+# bind ^h ???         # default
+# bind ^h
+# bind }  history     # default
+# bind }
+#
+# And here are the default bind commands if you need them:
+#
+# bind A title
+# bind C clear
+# bind D pow_detach
+# bind F fit
+# bind H log
+# bind I login on
+# bind K kill
+# bind L login
+# bind M monitor
+# bind N number
+# bind O login off
+# bind Q only
+# bind S split
+# bind W width
+# bind X remove
+# bind Z reset
+#
+# ==============================================================
+# KEY BINDING FAQ:
+# ==============================================================
+# FAQ: So many keys are bound to some command already -
+#      which keys are unbound yet? Which are free for binding?
+# A:   SCREEN does not have a command to show you
+#      a table of currently unbound keys - sorry!
+#      You simply have to read this setup file. ;-)
+#
+#      Summary:  Here is a table of the keys
+#      which are not bound by default:
+#      unbound:  -B--E-G--J-L---P-R-TUV--Y-
+#        bound:  A-CD-F-HI-K-MNO-Q-S---WX-Z
+#
+# I suggest that you do not change the bindings for
+# 'H' ("log") and 'M' ("monitor") as they are *really*
+# useful and you might want to use them a lot;
+# in this case it is recommended to use
+# the defaults to avoid confusion.
+# personally, I use 'A' ("title") quite often, too.
+#
+# If you are using "split windows"
+# then you will also use the command
+# associated with the keys FQSX a lot, too -
+# so do not change their bindings, either!
+#
+# Anyway, I have bound the unbound uppercase letters
+# to start programs in windows directly, ie without
+# starting a new window with a shell within first.
+# This simply saves shells and thus saves RAM -
+# and also avoids that the title of windows is
+# the name of your shell.  Also, you need not "exit"
+# from a shell when you are done with some program.
+# And when using "zombie mode" then the window will stay
+# and you can resurrect them with the CTRL-SPACE command.
+# cool! :-)
+#
+# enable "zombie mode":
+# zombie z
+# here the parameter 'z' defines the key
+# which makes a zombie window go away.
+#
+#
+# ==============================================================
+# BIND and the Services:
+# ==============================================================
+# I am using the uppercase letters to start programs/services:
+#
+# the idea:
+# bind <key> <command>
+# this binds the key to start a windows with <command> inside.
+#
+# the command "screen" starts a "window" -
+# and the default key is 'c' for "create".
+# (i know - this *is* confusing at first.)
+# with 'screen -t title" you can set a titlestring.
+# the number following is the window number to be used.
+# if the window number is already taken then
+# the least highest available number is used.
+#
+#
+# bind A title  # default!
+#
+# BUUG - Berlin Unix User Group - read some news about Unix
+# bind B # unbound by default
+# bind B screen -t 'buug' 4 links www.buug.de
+# bind B screen -t 'BICS' 4 links http://ods.schule.de/bics/inf1/tagung/index.htm
+#
+# CHEM - LinuxTag event in Chemnitz -- 2003-03-01 + 2003-03-02
+# bind C screen -t 'CAMP' 9 links http://www.ccc.de/camp/index.en.html
+# bind C screen -t 'CHEM' 9 links 'www.tu-chemnitz.de/linux/tag/lt5/vortraege/?print=1'
+# bind C screen -t 'CIT'  9 links http://www.guckes.net/cit/
+# bind C screen -t 'CIT'  9 links http://www.computerinfotag.de
+# NOTE:  This overrides the default binding for the "clear" command.
+#
+# www.a1.net   www.izone.at
+# www.one.at
+# DICT - Dictionary English<->German
+# bind D pow_detach !
+# bind D screen -t 'DICT' 4 links dict.tu-chemnitz.de
+# Note: this overrides the default binding for the
+# command "pow_detach".  I hardly ever use that one.
+#
+# MUTT - Email User Agent
+# bind E # unbound by default
+# bind E screen -t 'mail' 0 mutt
+# I use email quite a lot - so window #0 is reserved for that.
+# see also:  http://www.guckes.net/mutt/
+#
+# FTP - File Transfer "Program"
+# bind F fit # default!
+# bind F screen -t 'ftp' 9 ncftp
+# bind F screen -t 'forecast' 4 links http://www.donnerwetter.de/region/suchort.mv?search=10719
+# see also:  http://www.guckes.net/ncftp/
+#
+# GOOGLE - Web Search Engine
+# bind G # unbound by default
+# bind G screen -t 'Google' links www.google.com
+# bind G screen -t 'Google' w3m www.google.com
+#
+# HEISE - IT NewsTicker
+# bind H log # default!
+# bind H screen -t HeiseTicker links www.heise.de
+# bind H screen -t HTL links http://aosc.htlw16.ac.at/lw2003.html
+# NOTE: This overrides the default binding of the "hardcopy" command!
+#
+# IRC - International Relay Chat
+# bind I screen -t 'irc'  5 irc
+# bind I screen -t 'icq'  9 micq
+# see also:  http://www.guckes.net/irc/
+#
+# Feb 2002:  Use it to search the Internet Movie DataBase (IMDB):
+# bind I screen -t 'IMDB' 9 links http://www.imdb.com/
+# bind I screen -t 'IMDB' 9 links http://us.imdb.com/search/
+# see also: http://www.guckes.net/berlinale/
+#
+# bind J # unbound by default
+#
+## bind K  kill # default!
+#  bind K
+# This *removes* the binding for 'K'
+# thus requireing you to enter the
+# command via the command line, ie ":kill".
+# This prevent accidental killing of your windows.
+# Old versions of SCREEN do not prompt for
+# confirmation on "killing a window", you see..
+#
+# LYNX - web browser
+# bind L # unbound by default
+# bind L screen -t 'lynx' 4 lynx  http://www.guckes.net/
+# see also:  http://www.guckes.net/lynx/
+# see also:  http://www.guckes.net/links/
+# bind L screen -t 'WWW'  4 links http://www.infodrom.org/Debian/events/LinuxTag2003/
+# bind L screen -t 'WWW'  4 links http://www.linuxtag.org/2003/de/conferences/conferences.html
+# bind L screen -t 'WWW'  4 links http://www.linuxinfotage.de/
+# bind L screen -t 'WWW'  4 links http://www.lug-camp-2002.de/programm.html
+# bind L screen -t 'WWW'  4 links http://www.mdlug.de/index.php/linuxtag2002/vortraege/v12.inc?menu=0|4|
+# bind L screen -t 'WWW'  4 links http://www.mdlug.de/index.php/linuxtag2002/programm.inc?menu=0|4|&nomfc=1
+# bind L screen -t 'WWW'  4 links http://www.infodrom.org/Debian/events/LinuxTag2002/workshop.php3?room=WS+2&day=2002-06-07&time=16:00
+# bind L screen -t 'WWW'  4 links http://www.guckes.net/linuxtag2002/
+# bind L screen -t 'WWW'  4 links http://www.guckes.net/
+# bind L screen -t 'LT-DRESDEN'  4 links http://www.linuxinfotag.de/
+#
+#  bind M monitor # default!
+# bind M screen -t MD 9 links 'http://www.mdlug.info/linuxtag2003/index.php?option=linuxtag&Itemid=52'
+#
+# Nepal:
+# bind N screen -t 'Nepal'  links http://www.wunderground.com/global/stations/44454.html
+# Berlin, Tegel Airport:
+# bind N screen -t 'Wetter' links http://www.wunderground.com/global/stations/10382.html
+#
+# Paste - use 'P' instead of ']':
+# bind P # unbound by default
+#  bind P paste .
+# The character ']' is hard to type on german keyboards,
+# as it requires the use of a yet another meta character "AltGR".
+# I prefer to use 'P' for "paste" because it is a letter
+# which is available at the same position both with the
+# US keyboards and keyboards with "Kraut layout" -
+# which I call" Krautboards", by the way. ;-)
+# bind ] paste . # default!
+#
+#      Register page at NetMind's Service:
+# bind R # unbound by default
+# bind R screen links http://www.netmind.com/URL-minder/new/register.html
+#
+#
+# SLRN - newsreader
+# bind S screen -t 'slrn' 3 slrn -n -C -k0
+# bind S screen -t 'SED' 3 links http://www.guckes.net/sed/
+# see also:
+# http://www.slrn.org  ----->
+# http://slrn.sourceforge.net
+# http://www.guckes.net/slrn/ (old)
+#
+# bind T # unbound by default
+# bind T screen -t TRASH ssh trash
+#
+# bind U # unbound by default
+# bind U screen
+# bind U screen -t 'Unterk'  4 links http://www.infodrom.org/Debian/events/LinuxTag2003/
+# VIM - editor
+# bind V # unbound by default
+#  bind V screen -t 'vim' 1 vim -X
+#
+# Editing comes with email quite naturally -
+# so I have reserved window #1 for this.
+# http://www.guckes.net/vim/
+#
+#      W - WIEN!
+# bind W screen -t 'WIEN'  4 links http://www.linuxwochen.at/cgi-bin/index?topic=Wien&print=yes
+# bind W screen -t 'WIEN'  4 links http://wien.linuxwochen.at/
+# bind W screen -t 'WIKI'  4 links http://linuxwiki.org/LinuxTag2003_2fFahrGemeinschaften
+# bind W screen -t WETTER  4 links http://www.wetteronline.de
+# bind W screen -t WETTER  4 links http://www.wetteronline.de/Mecklenb-Vorp/MecklSeen.htm
+# bind W screen -t WETTER  4 links http://www.wetteronline.de/cgi-bin/citybild?PLZ=01099&PLZN=Dresden
+#
+#      W - Webster
+# bind W screen -t WEBSTER 4 links http://www.m-w.com/
+# bind W screen -t NEWS slrn -h news.hostsharing.net
+#
+#      X - a fast way to lock the current screen.
+#  bind X lockscreen
+#
+# bind Y exec !!! echo -n http://www.guckes.net/
+# bind Y stuff http://www.guckes.net/
+# This pastes the address of my homepage to the process
+# in the current window.  very nice - saves some typing.
+# and you don't have to have the functionality of
+# "abbreviating" in the processes themselves. :-)
+#
+#
+# bind Z screen -t HOME links http://www.guckes.net/
+# ===============================================================
+# BIND Examples:
+# ===============================================================
+# You can also paste the values of
+# SCREEN's environment variables:
+# bind E stuff $EMAIL
+# bind U stuff $URL
+# bind I stuff $ICQ
+#
+# ===============================================================
+# BINDKEY:
+# ===============================================================
+# [TODO briefly explain the difference between BIND and BINDKEY]
+#
+#
+# Use the function keys F7 and F8
+# to cycle backwards/forwards in
+# the list of existing windows:
+#  bindkey -k k7 prev
+#  bindkey -k k8 next
+#
+# make the "kb" send a backspace (CTRL-H:)
+# bindkey -d kb stuff ^H
+# WARNING:  this does not work as advertised.
+# it eats the "kb" when typing "dankbar" for example. :-(
+#
+# NumPad keybindings:
+# ^[Oo /      resize =
+# ^[Oj *      resize max
+# ^[Om -      resize -2
+# ^[Ok +      resize +2
+# ^[OM Enter
+#
+# ================================
+
+# vim: ts=8 et nowrap
