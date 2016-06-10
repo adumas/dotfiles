@@ -30,7 +30,15 @@ else
 fi
 }
 
-#[ $HOSTNAME == "eesmith" ] && ssh_agent_start
 unset ssh_agent_start
+
+# paths to use homebrew-derived GNU utils instead of native OS X gnu-utils (ls, etc)
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+# homebrew bash completions
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
 
 # End ~/.bash_profile

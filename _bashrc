@@ -50,7 +50,7 @@ source $HOME/.bashrc.alias
 source $HOME/.bashrc.bindkey
 
 #        completions for interactive shells
-source $HOME/.bash_completion.main
+#source $HOME/.bash_completion.main
 source $HOME/.git-completion.bash
 
 #	local settings
@@ -105,8 +105,8 @@ welcome() {
 echo -e "${W}`date`"
 echo -e "${EMW}${BGB}$PWD${NONE}"
 echo -e "${EMR}`uptime | sed \"s:^\ ::\"`"
-local mem="$(( `sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/1024))/$((`sed -nu "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/Ip" /proc/meminfo`/1024 )) MB"
-echo -e "${EMM}Memory Usage: $mem"
+#local mem="$(( `sed -nu "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/1024))/$((`sed -nu "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/Ip" /proc/meminfo`/1024 )) MB"
+#echo -e "${EMM}Memory Usage: $mem"
 tput -T xterm sgr0
 }
 welcome

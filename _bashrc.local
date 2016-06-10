@@ -14,17 +14,6 @@
 export VISUAL=`which vim`
 export EDITOR=`which vim`
 
-export PRINTER="InvalidPrinter"
-export LPDEST="InvalidPrinter"
-
-set FSENV_KEEP_PROMPT
-export PYTHONPATH="/homes/6/adumas/lib/python/"
-
-export ICH="/cluster/ichresearch/Petechial"
-export PET="/autofs/space/eesmith_001/users/dierksen/Petichial"
-export SUBJECTS_DIR=$ICH
-export SCRIPTS="/autofs/space/eesmith_001/users/dierksen/Petichial/scripts"
-
 [ "$COLORTERM" == "gnome-terminal" ] && export TERM="xterm-256color"
 
 
@@ -102,15 +91,12 @@ bash_prompt() {
     local SRC=${UNG}		#server color, default to underline green
     local ENDP='\$'		#ending; will be $ for most, or %> for launchpad
 
-    [ $HOSTNAME == "launchpad" ] 	&& SRC=$UNW && ENDP='%>'
-    [ $HOSTNAME == "seychelles" ]	&& SRC=$UNW
-    [ $HOSTNAME == "gate" ] 		&& SRC=$UNW
     
     #for git...
     GIT_PS1_SHOWDIRTYSTATE=1
     
     
-    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${EMM}\$(__git_ps1)${NONE}${W}${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG}\$(echo -e \${FSPROMPT}))${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
+    PS1="${EMK}${UC}\u${G}@${SRC}\H${UNOFF}${EMG}(${EMM}\$(__git_ps1)${NONE}${W}${BGB}${SSH_TTY#/*/}${G}+${SHLVL}${EMG})${W}: ${EMW}\w${W}\n[${EMR}\A ${B}\#/\!${W}]${ENDP} ${NONE}"
 	
 
 # without colors: PS1="[\u@\h \${NEW_PWD}]\\$ "
@@ -118,7 +104,7 @@ bash_prompt() {
 }
 
 #if [[ "$COLORTERM" == "gnome-terminal" ]]; then
-   PROMPT_COMMAND='history -a;echo -en "\033]0;${HOSTNAME} [`temp=$(tty); echo ${temp:5}`]$FSTAG\007";'
+   PROMPT_COMMAND='history -a;echo -en "\033]0;${HOSTNAME} [`temp=$(tty); echo ${temp:5}`]\007";'
 #else
 #   PROMPT_COMMAND='history -a;'
 #fi
@@ -127,7 +113,7 @@ bash_prompt
 #unset bash_prompt
 
 ## FUNCTIONS
-[[ -f ~/.autojump/etc/profile.d/autojump.bash ]] && source ~/.autojump/etc/profile.d/autojump.bash
+#[[ -f ~/.autojump/etc/profile.d/autojump.bash ]] && source ~/.autojump/etc/profile.d/autojump.bash
 eval `dircolors -b ~/.dircolors.256dark`	#Proper LS_COLOR vars
 
 
@@ -137,36 +123,6 @@ export HISTFILESIZE=10000 # Record last 10,000 commands
 export HISTSIZE=10000 # Record last 10,000 commands per session
 
 # ALIASES
-## MARTINOS/NMR SPECIFIC
-alias pet='cd /autofs/space/eesmith_001/users/dierksen/Petichial'
-alias ich='cd /cluster/ichresearch/Petechial'
-alias CAA='cd /autofs/space/eesmith_001/users/dierksen/CAA'
-alias ups='unpacksdcmdir -src dicom_raw -targ mri -fsfast -scanonly scans'
-alias upu='unpacksdcmdir -src dicom_raw -targ mri -fsfast -cfg config_file -u'
-alias qstatme='$SCRIPTS/watch_cluster.pl'
-alias wikiuploader=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/wikiuploader_andrew.pl 
-alias unpack=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/Unpack.sh 
-alias launch=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/launch.sh 
-alias lastjob=/homes/6/adumas/bin/lastjob.sh 
-alias ljout=/homes/6/adumas/bin/lastjob_output.sh 
-alias ljerror=/homes/6/adumas/bin/lastjob_error.sh 
-alias rmjobs=/homes/6/adumas/bin/deleteAllJobs.sh 
-alias sdp='export SUBJECTS_DIR=$PET'
-alias sdi='export SUBJECTS_DIR=$ICH'
-alias stable='source $ICH/SetUpFreeSurferV5.bash'
-alias stab='source $ICH/SetUpFreeSurferV5.bash'
-alias fs='source $ICH/SetUpFreeSurferV5.bash'
-alias fs4='source $PET/SetUpFreeSurferV4.bash'
-alias ee='~/bin/eesmith'
-alias watchc='watch -n 2 $SCRIPTS/watch_cluster.pl'
-
-#alias kiwi='echo "logging on to kiwi..."; ssh dumas@kiwi.mgh.harvard.edu'
-alias locate='locate -d /autofs/space/eesmith_001/users/dierksen/Petichial/mlocate.db*'
-
-alias pbcmd="~/bin/pbslastcmd.sh" 
-alias vncserver='vncserver -depth 24 -geometry 1280x1024' 
-alias dcminfo=/autofs/space/eesmith_001/users/dierksen/Petichial/scripts/dicomInfo.sh 
-alias scriptfind="~/bin/within_scripts_search.sh"
 
 #GENERAL SHELL HANDY ALIASES
 alias c='clear'
@@ -175,8 +131,9 @@ alias ht='history | tail -20'
 alias hsy='history -n'
 alias lsnc='ls -1 --color=none'
 alias cls='clear; ls'
-alias dus='du -cks * | sort -nr'
+#alias dus='du -cks * | sort -nr'
 
+alias ll='ls -l'
 
 alias ls='ls --color' #I like color
 alias l='ls -lFh'     #size,show type,human readable
@@ -190,7 +147,6 @@ alias .='cd ../'
 alias ..='cd ../../'
 alias ...='cd ../../../'
 alias ....='cd ../../../../'
-
 
 
 
