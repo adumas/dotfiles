@@ -9,6 +9,16 @@
 # environment variables and startup programs are in /etc/profile.
 # System wide aliases and functions are in /etc/bashrc.
 
+# paths to use homebrew-derived GNU utils instead of native OS X gnu-utils (ls, etc)
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
+# homebrew bash completions
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+# source bashrc
 if [ -f "$HOME/.bashrc" ] ; then
   source $HOME/.bashrc
 fi
@@ -32,13 +42,5 @@ fi
 
 unset ssh_agent_start
 
-# paths to use homebrew-derived GNU utils instead of native OS X gnu-utils (ls, etc)
-PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-
-# homebrew bash completions
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
-fi
 
 # End ~/.bash_profile
