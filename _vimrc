@@ -41,7 +41,7 @@ call vundle#end()            " required
 " Douglas Black
 " Colors {{{
 syntax enable           " enable syntax processing
-colorscheme badwolf
+colorscheme default
 " }}}
 
 " Misc {{{
