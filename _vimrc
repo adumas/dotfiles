@@ -12,28 +12,28 @@ augroup END
 " }}}
 
 
-" Vundle Plugins {{{
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin 'sjl/badwolf' " badwolf color scheme
-Plugin 'bling/vim-airline'	" airline
-let g:airline_powerline_fonts = 1
-set laststatus=2
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
+"" Vundle Plugins {{{
+"" set the runtime path to include Vundle and initialize
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+"" alternatively, pass a path where Vundle should install plugins
+""call vundle#begin('~/some/path/here')
+"
+"" let Vundle manage Vundle, required
+"Plugin 'gmarik/Vundle.vim'
+"Plugin 'sjl/badwolf' " badwolf color scheme
+"Plugin 'bling/vim-airline'	" airline
+"let g:airline_powerline_fonts = 1
+"set laststatus=2
+"
+"" The following are examples of different formats supported.
+"" Keep Plugin commands between vundle#begin/end.
+"" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
+"
+"
+"" All of your Plugins must be added before the following line
+"call vundle#end()            " required
 " }}}
 
 
