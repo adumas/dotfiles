@@ -39,6 +39,14 @@ fi
 append $SCRIPTS
 unset append
 
+# SSH_AGENT 
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+    eval `ssh-agent`
+    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l | grep "The agent has no identities" && ssh-add ~/.ssh/id_rsa ~/.ssh/github_rsa.pub
+
 
 #NOW THE PROMPT AND TITLE BAR
 bash_prompt() {
