@@ -21,6 +21,9 @@ fi
 # homebrew/github API token
 export HOMEBREW_GITHUB_API_TOKEN=ee035f3c4f9db9ba0fddff7c0bdff437e88ad5f0
 
+# homebrew pythonpath
+export PYTHONPATH="${PYTHONPATH}:/usr/local/lib/python2.7/site-packages" 
+
 # source bashrc
 if [ -f "$HOME/.bashrc" ] ; then
   source $HOME/.bashrc
